@@ -6,3 +6,5 @@ alert("I EXIST");
 // console.log("CHANGE!!");
 
 // sass files
+
+export { checkForName, handleSubmit };
