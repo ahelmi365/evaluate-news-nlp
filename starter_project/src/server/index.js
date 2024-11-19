@@ -7,7 +7,7 @@ dotenv.config();
 const app = express();
 
 const cors = require('cors');
-
+app.use(express.static('dist'))
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -17,7 +17,7 @@ console.log(__dirname);
 
 
 app.get('/', function (req, res) {
-    res.send("This is the server API page, you may access its services via the client app.");
+    res.send("./dist/index.html")
 });
 
 
