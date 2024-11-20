@@ -14,7 +14,10 @@ app.use(bodyParser.json());
 console.log(__dirname);
 
 // Variables for url and api key
-
+// You could call it aylienapi, or anything else
+var textapi = new aylien({
+    application_key: process.env.API_KEY
+  });
 
 app.get('/', function (req, res) {
     res.send("./dist/index.html")
