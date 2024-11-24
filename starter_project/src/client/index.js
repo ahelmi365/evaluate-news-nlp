@@ -2,8 +2,8 @@
 import { handleSubmit } from "./js/formHandler";
 import { checkForName } from "./js/nameChecker";
 
-alert("I EXIST");
-// console.log("CHANGE!!");
+// alert("I EXIST");
+console.log("CHANGE!!");
 
 // sass files
 import './styles/resets.scss'

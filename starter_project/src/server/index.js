@@ -24,8 +24,38 @@ app.get("/", function (req, res) {
 });
 
 // POST Route
+app.post("/checkText", async (req, res) => {
+  console.log(req.body);
+  //   const response = await makeRequest(req.body.text);
+  //   const data = await response.json()
+  //   console.log({ response });
+  const data = await makeRequest(req.body);
+  res.send({ ok: true, message: "SUCCESS", data: data });
+});
 
+const makeRequest = async (formText) => {
+  const formdata = new FormData();
+  formdata.append("key", "baff2a8e891118765dce51191d26e648");
+  formdata.append("txt", formText);
+  formdata.append("lang", "en"); // 2-letter code, like en es fr ...
+
+  const requestOptions = {
+    method: "POST",
+    body: formdata,
+    redirect: "follow",
+  };
+
+  const response = await fetch(
+    "https://api.meaningcloud.com/sentiment-2.1",
+    requestOptions
+  );
+  const data = await response.json();
+  data.formText = formText;
+  console.log({ data });
+
+  return data;
+};
 // Designates what port the app will listen to for incoming requests
-app.listen(8000, function () {
-  console.log("Example app listening on port 8000!");
+app.listen(8001, function () {
+  console.log("Example app listening on port 8001!");
 });
