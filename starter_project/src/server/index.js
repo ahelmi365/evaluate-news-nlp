@@ -34,24 +34,23 @@ app.post("/checkText", async (req, res) => {
 });
 
 const makeRequest = async (formText) => {
+  console.log({formText})
   const formdata = new FormData();
   formdata.append("key", "baff2a8e891118765dce51191d26e648");
-  formdata.append("txt", formText);
-  formdata.append("lang", "en"); // 2-letter code, like en es fr ...
-
+  formdata.append("url", formText.text);
+  formdata.append("lang", "auto"); // 2-letter code, like en es fr ...
   const requestOptions = {
     method: "POST",
     body: formdata,
     redirect: "follow",
   };
-
   const response = await fetch(
     "https://api.meaningcloud.com/sentiment-2.1",
     requestOptions
   );
   const data = await response.json();
   data.formText = formText;
-  console.log({ data });
+  // console.log({ data });
 
   return data;
 };
