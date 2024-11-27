@@ -53,7 +53,7 @@ const checkText = async (text) => {
 
     const data = await res.json();
     console.log({ data });
-    return data
+    return data;
   } catch (error) {
     console.log(error);
   }
@@ -70,15 +70,17 @@ const updateUI = (data) => {
     NONE: " Without Polarity",
   };
   const formTextElm = document.getElementById("formText");
+  const confidenceElm = document.getElementById("confidence");
   const polarityElm = document.getElementById("polarity");
   const subjectivityElm = document.getElementById("subjectivity");
-  console.log({ data });
   const result = data.data;
+  console.log(result);
   formTextElm.textContent = result.formText.text;
+  confidenceElm.textContent = result.confidence;
   const selectedPolarity = polarities[result.score_tag];
   polarityElm.textContent = `(${result.score_tag}) ${selectedPolarity}`;
-  subjectivityElm.textContent =
-    result.subjectivity[0] + result.subjectivity.toLowerCase().slice(1);
+  subjectivityElm.textContent =result.subjectivity
+  //   result.subjectivity[0] + data.subjectivity.toLowerCase().slice(1);
 };
 // Export the handleSubmit function
 export { handleSubmit };
