@@ -10,35 +10,47 @@
 
     <header>
         <div class="">
-            Logo
+            NLP 
         </div>
         <div class="">
-            navigation
+            Home
         </div>
     </header>
 
     <main>
         <section>
             <form id="urlForm">
-                <input id="name" type="text" name="url" placeholder="Enter URL" required>
+                <label for="url">Please enter URL</label>
+                <input id="url" type="text" name="url" placeholder="Enter URL" required>
                 <button id="submitButton" type="submit">Submit</button>
             </form>
 
         </section>
 
         <section>
-            <strong>Form Results:</strong>
+            <h1>Top 10 Entities by Confidence Score</h1>
             <div id="results">
-                <p>Text: <span id="formText"></span></p>
-                <p>Confidence Score: <span id="confidence"></span></p>
-                <p>Polarity: <span id="polarity"></span></p>
-                <p>Subjectivity: <span id="subjectivity"></span></p>
+                <p id="urlText">URL: </p>
+                <table id="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Matched Text</th>
+                            <th>Confidence Score</th>
+                            <th>Relevance Score</th>
+                            <th>Wiki-Link</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+
+                    </tbody>
+                </table>
             </div>
         </section>
     </main>
 
     <footer>
-        <p>This is a footer</p>
+        <p>Copy Rights  - Ali Helmi - 2025</p>
     </footer>
 
 </body>

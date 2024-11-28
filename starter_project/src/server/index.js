@@ -11,7 +11,6 @@ app.use(express.static("dist"));
 app.use(cors());
 app.use(bodyParser.json());
 
-console.log(__dirname);
 
 // Variables for url and api key
 // You could call it aylienapi, or anything else
@@ -19,13 +18,15 @@ const textapi = {
   application_key: process.env.API_KEY,
 };
 
+
+
 app.get("/", function (req, res) {
   res.send("./dist/index.html");
 });
 
 // POST Route
 app.post("/checkText", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   //   const response = await makeRequest(req.body.text);
   //   const data = await response.json()
   //   console.log({ response });
@@ -34,25 +35,56 @@ app.post("/checkText", async (req, res) => {
 });
 
 const makeRequest = async (formText) => {
-  console.log({formText})
-  const formdata = new FormData();
-  formdata.append("key", "baff2a8e891118765dce51191d26e648");
-  formdata.append("url", formText.text);
-  formdata.append("lang", "auto"); // 2-letter code, like en es fr ...
   const requestOptions = {
     method: "POST",
-    body: formdata,
-    redirect: "follow",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "x-textrazor-key": textapi.application_key,
+    },
+    body: new URLSearchParams({
+      extractors: "entities,entailments",
+      url: formText.text,
+    }),
   };
-  const response = await fetch(
-    "https://api.meaningcloud.com/sentiment-2.1",
-    requestOptions
-  );
-  const data = await response.json();
-  data.formText = formText;
-  // console.log({ data });
 
-  return data;
+  try {
+    const response = await fetch("https://api.textrazor.com/", requestOptions);
+    const data = await response.json();
+    data.formText = formText;
+    // console.log({ data });
+    const entities = data.response.entities;
+    const uniqueEntities = getUniqeEntities(entities);
+    const sortedEntities = sortEntitiesByConfidenceScore(uniqueEntities);
+    return sortedEntities.slice(0, 10);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const sortEntitiesByConfidenceScore = (entities) => {
+  // convert to set
+  // back to list
+  // sort
+  // get top 10
+  const sortedEntities = entities.sort(
+    (entityA, entityB) => entityB.confidenceScore - entityA.confidenceScore
+  );
+
+  return sortedEntities;
+};
+
+const getUniqeEntities = (entities) => {
+  const seen = new Set();
+  const uniqueEntities = entities.filter((entity) => {
+    if (seen.has(entity.matchedText.toLowerCase())) {
+      return false;
+    } else {
+      seen.add(entity.matchedText.toLowerCase());
+      return true;
+    }
+  });
+
+  return uniqueEntities;
 };
 // Designates what port the app will listen to for incoming requests
 app.listen(8001, function () {

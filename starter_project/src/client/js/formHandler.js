@@ -1,45 +1,27 @@
 // Replace checkForName with a function that checks the URL
 import { checkForName } from "./nameChecker";
 
-// If working on Udacity workspace, update this with the Server API URL e.g. `https://wfkdhyvtzx.prod.udacity-student-workspaces.com/api`
-// const serverURL = 'https://wfkdhyvtzx.prod.udacity-student-workspaces.com/api'
 const serverURL = "https://localhost:8000/api";
 
 const form = document.getElementById("urlForm");
+const formText = document.getElementById("url");
+const urlTextElm = document.getElementById("urlText");
+const tableBody = document.getElementById("tableBody");
+
 form.addEventListener("submit", handleSubmit);
 
 async function handleSubmit(event) {
   event.preventDefault();
-
+  urlTextElm.textContent = "URL:";
+  tableBody.innerHTML = "";
   // Get the URL from the input field
-  const formText = document.getElementById("name").value;
+  // const formText = document.getElementById("name").value;
+  if (!formText.value) return;
   // await makeRequest(formText);
-  const data = await checkText(formText);
-  updateUI(data);
+  const data = await checkText(formText.value);
+  console.log(data.data);
+  updateUI(data.data);
 }
-
-const makeRequest = async (formText) => {
-  const formdata = new FormData();
-  formdata.append("key", "baff2a8e891118765dce51191d26e648");
-  formdata.append("txt", formText);
-  formdata.append("lang", "en"); // 2-letter code, like en es fr ...
-
-  const requestOptions = {
-    method: "POST",
-    body: formdata,
-    redirect: "follow",
-  };
-
-  const response = await fetch(
-    "https://api.meaningcloud.com/sentiment-2.1",
-    requestOptions
-  );
-  const data = await response.json();
-  data.formText = formText;
-  console.log({ data });
-
-  updateUI(data);
-};
 
 const checkText = async (text) => {
   try {
@@ -52,35 +34,34 @@ const checkText = async (text) => {
     });
 
     const data = await res.json();
-    console.log({ data });
     return data;
   } catch (error) {
     console.log(error);
   }
 };
+
 // Function to send data to the server
 
 const updateUI = (data) => {
-  const polarities = {
-    "P+": " Strong Positive",
-    P: " Positive",
-    NEU: " Neutral",
-    N: " Negative",
-    "N+": " Strong Negative",
-    NONE: " Without Polarity",
-  };
-  const formTextElm = document.getElementById("formText");
-  const confidenceElm = document.getElementById("confidence");
-  const polarityElm = document.getElementById("polarity");
-  const subjectivityElm = document.getElementById("subjectivity");
-  const result = data.data;
-  console.log(result);
-  formTextElm.textContent = result.formText.text;
-  confidenceElm.textContent = result.confidence;
-  const selectedPolarity = polarities[result.score_tag];
-  polarityElm.textContent = `(${result.score_tag}) ${selectedPolarity}`;
-  subjectivityElm.textContent =result.subjectivity
-  //   result.subjectivity[0] + data.subjectivity.toLowerCase().slice(1);
+  urlTextElm.textContent += formText.value;
+  formText.value = "";
+  // update table ui
+  const fragment = document.createDocumentFragment();
+
+  data.forEach((entity, index) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${entity.matchedText}</td>
+        <td>${entity.confidenceScore}</td>
+        <td>${entity.relevanceScore}</td>
+        <td><a href="${entity.wikiLink}" target="_blank">${entity.wikiLink}</a></td>
+      </tr>
+    `;
+    fragment.appendChild(tr);
+    tableBody.append(fragment);
+  });
 };
 // Export the handleSubmit function
 export { handleSubmit };
