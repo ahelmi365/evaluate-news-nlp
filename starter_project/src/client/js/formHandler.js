@@ -7,11 +7,13 @@ const form = document.getElementById("urlForm");
 const formText = document.getElementById("url");
 const urlTextElm = document.getElementById("urlText");
 const tableBody = document.getElementById("tableBody");
+const loading = document.getElementById("loading");
 
 form.addEventListener("submit", handleSubmit);
 
 async function handleSubmit(event) {
   event.preventDefault();
+  loading.style.display = 'block'
   urlTextElm.textContent = "URL:";
   tableBody.innerHTML = "";
   // Get the URL from the input field
@@ -62,6 +64,7 @@ const updateUI = (data) => {
     fragment.appendChild(tr);
     tableBody.append(fragment);
   });
+  loading.style.display = 'none'
 };
 // Export the handleSubmit function
 export { handleSubmit };
