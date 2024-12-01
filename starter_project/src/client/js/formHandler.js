@@ -66,19 +66,8 @@ const updateUI = (data) => {
 
     data.forEach((entity, index) => {
       const tr = document.createElement("tr");
-      tr.innerHTML = `
-      <tr>
-        <td>${index + 1}</td>
-        <td>${entity.matchedText}</td>
-        <td>${entity.confidenceScore}</td>
-        <td>${entity.relevanceScore}</td>
-        <td><a 
-        href="${entity?.wikiLink ? entity?.wikiLink : ""}" 
-        target="${entity?.wikiLink ? "_blank" : ""}">${
-        entity.wikiLink ? entity?.wikiLink : "No link found"
-      }</a></td>
-      </tr>
-    `;
+      tr.innerHTML = createHTMLFragment(index, entity);
+
       fragment.appendChild(tr);
       if (tableBody) {
         tableBody.append(fragment);
