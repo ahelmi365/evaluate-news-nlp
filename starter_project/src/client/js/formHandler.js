@@ -9,7 +9,7 @@ const urlTextElm = document.getElementById("urlText");
 const tableBody = document.getElementById("tableBody");
 const loading = document.getElementById("loading");
 
-form.addEventListener("submit", handleSubmit);
+form?.addEventListener("submit", handleSubmit);
 
 async function handleSubmit(event) {
   event.preventDefault();
@@ -55,8 +55,12 @@ const updateUI = (data) => {
   if (!data) {
     return;
   } else {
-    urlTextElm.textContent += formText.value;
-    formText.value = "";
+    if (urlTextElm) {
+      urlTextElm.textContent += formText.value;
+    }
+    if (formText) {
+      formText.value = "";
+    }
     // update table ui
     const fragment = document.createDocumentFragment();
 
@@ -68,16 +72,37 @@ const updateUI = (data) => {
         <td>${entity.matchedText}</td>
         <td>${entity.confidenceScore}</td>
         <td>${entity.relevanceScore}</td>
-        <td><a href="${entity.wikiLink}" target="_blank">${
-        entity.wikiLink
+        <td><a 
+        href="${entity?.wikiLink ? entity?.wikiLink : ""}" 
+        target="${entity?.wikiLink ? "_blank" : ""}">${
+        entity.wikiLink ? entity?.wikiLink : "No link found"
       }</a></td>
       </tr>
     `;
       fragment.appendChild(tr);
-      tableBody.append(fragment);
+      if (tableBody) {
+        tableBody.append(fragment);
+      }
     });
-    loading.style.display = "none";
+
+    if (loading) {
+      loading.style.display = "none";
+    }
   }
 };
+
+const createHTMLFragment = (index, entity) => {
+  return `<tr>
+        <td>${index + 1}</td>
+        <td>${entity.matchedText}</td>
+        <td>${entity.confidenceScore}</td>
+        <td>${entity.relevanceScore}</td>
+        <td><a 
+        href='${entity?.wikiLink ? entity?.wikiLink : ""}' 
+        target='${entity?.wikiLink ? "_blank" : ""}'>${
+    entity.wikiLink ? entity?.wikiLink : "No link found"
+  }</a></td>
+      </tr>`;
+};
 // Export the handleSubmit function
-export { handleSubmit };
+export { handleSubmit, updateUI, createHTMLFragment };
