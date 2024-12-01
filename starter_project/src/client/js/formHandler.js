@@ -1,5 +1,5 @@
-// Replace checkForName with a function that checks the URL
-import { checkForName } from "./nameChecker";
+// Replace isValidURL with a function that checks the URL
+import { isValidURL } from "./nameChecker";
 
 const serverURL = "https://localhost:8000/api";
 
@@ -13,16 +13,23 @@ form.addEventListener("submit", handleSubmit);
 
 async function handleSubmit(event) {
   event.preventDefault();
-  loading.style.display = 'block'
+  loading.style.display = "block";
   urlTextElm.textContent = "URL:";
   tableBody.innerHTML = "";
   // Get the URL from the input field
   // const formText = document.getElementById("name").value;
   if (!formText.value) return;
+  if (!isValidURL(formText.value)) {
+    console.log("not valid URL");
+    loading.style.display = "none";
+    return;
+  }
   // await makeRequest(formText);
   const data = await checkText(formText.value);
-  console.log(data.data);
-  updateUI(data.data);
+  if (data.data) {
+    // console.log(data.data);
+    updateUI(data.data);
+  }
 }
 
 const checkText = async (text) => {
@@ -45,26 +52,32 @@ const checkText = async (text) => {
 // Function to send data to the server
 
 const updateUI = (data) => {
-  urlTextElm.textContent += formText.value;
-  formText.value = "";
-  // update table ui
-  const fragment = document.createDocumentFragment();
+  if (!data) {
+    return;
+  } else {
+    urlTextElm.textContent += formText.value;
+    formText.value = "";
+    // update table ui
+    const fragment = document.createDocumentFragment();
 
-  data.forEach((entity, index) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
+    data.forEach((entity, index) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
       <tr>
         <td>${index + 1}</td>
         <td>${entity.matchedText}</td>
         <td>${entity.confidenceScore}</td>
         <td>${entity.relevanceScore}</td>
-        <td><a href="${entity.wikiLink}" target="_blank">${entity.wikiLink}</a></td>
+        <td><a href="${entity.wikiLink}" target="_blank">${
+        entity.wikiLink
+      }</a></td>
       </tr>
     `;
-    fragment.appendChild(tr);
-    tableBody.append(fragment);
-  });
-  loading.style.display = 'none'
+      fragment.appendChild(tr);
+      tableBody.append(fragment);
+    });
+    loading.style.display = "none";
+  }
 };
 // Export the handleSubmit function
 export { handleSubmit };

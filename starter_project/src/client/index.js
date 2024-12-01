@@ -1,6 +1,6 @@
 // js files
 import { handleSubmit } from "./js/formHandler";
-import { checkForName } from "./js/nameChecker";
+import { isValidURL } from "./js/nameChecker";
 
 // alert("I EXIST");
 console.log("CHANGE!!");
@@ -12,4 +12,4 @@ import './styles/footer.scss'
 import './styles/form.scss'
 import './styles/header.scss'
 
-export { checkForName, handleSubmit };
+export { isValidURL, handleSubmit };
