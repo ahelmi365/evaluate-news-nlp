@@ -1,4 +1,12 @@
-
+## Project Description:
+- This is a web tool that allows users to run Natural Language Processing (NLP) on articles or blogs found on other websites. The main page consists of a form that asks the user to enter the article url, then after submitting the form, the url is sent to another server to check the results. The returned result is the top 10 found Entities by Confidence Score.
+- The second part of this app is the results screen. It has a tabel with 5 columns:
+ - Column 1: Row number
+ - Column 2: Matched Text, all matched text from the article that have top score
+ - Column 3: Confidence Score for each text
+ - Column 4: Relevance Score for each text
+ - Column 5: Wiki-Link for each text (if found)
+- The user can resubmit new URL of new article and get a different results.
 
 ## Dependencies
 
